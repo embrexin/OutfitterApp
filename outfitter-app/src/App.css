@@ -1,38 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+  margin: 0;
+  overflow-y: hidden;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .App {
+  background: linear-gradient(to bottom, white, #C4F4FF);
+  height: 100vh;
+  padding: 20px;
+  color: #333;
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
   text-align: center;
+  margin-bottom: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app-name {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #47A0DF;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.weather {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  gap: 15px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #47A0DF;
+}
+
+.weather-icon {
+  font-size: 2em;
+}
+
+.weather-info {
+  border: 2px solid rgba(71, 160, 223, 0.5);
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.suggestions-button {
+  background-color: #71B87E;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+}
+
+.upcoming-events {
+  background-color: white;
+  background-image: linear-gradient(to bottom, #FF8E8E 30%, rgba(0,0,0,0) 20%);
+  border: 2px solid #FF8E8E;
+  border-radius: 15px;
+  padding: 10px;
+  padding-top: 20px;
+  margin-top: 0;
+  position: relative;
+}
+
+.upcoming-events h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 30px;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.event-list {
+  list-style: none;
+  padding: 0px 20px;
+  margin: 0;
+  padding-bottom: 10vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1em;
+  font-weight: medium;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.edit-icon {
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.add-event-button {
+  background-color: #FFEAEA;
+  color: #FF8E8E;
+  border: 2px solid #FF8E8E;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.recently-worn {
+  margin-top: 30px;
+}
+
+.recently-worn h2 {
+  color: #47A0DF;
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.worn-items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.worn-item {
+  background-color: white;
+  border-radius: 15px;
+  height: 150px;
+}
+
+.nav-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.nav-icon {
+  font-size: 1.8em;
+  margin-bottom: 5px;
 }
