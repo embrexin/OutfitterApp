@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 import './Suggestion.css';
 import Navigation from '../components/Navigation';
-import hoodie from '../assets/hoodie.jpg';
-import sweatpants from '../assets/sweatpants.webp';
+import hoodie from '../assets/clothing/hoodie.jpg';
+import sweatpants from '../assets/clothing/sweatpants.webp';
 
 function Suggestion() {
   const [temperature, setTemperature] = useState(null);
@@ -24,9 +24,11 @@ function Suggestion() {
       <div className="suggestion-grid">
         <div className="suggestion-item">
           <img src={hoodie} alt="hoodie" />
+          <div className="suggestion-item-label">Hoodie</div>
         </div>
         <div className="suggestion-item">
           <img src={sweatpants} alt="sweatpants" />
+          <div className="suggestion-item-label">Sweatpants</div>
         </div>
       </div>
       <div className="suggestion-buttons">

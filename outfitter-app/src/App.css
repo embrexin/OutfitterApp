@@ -150,7 +150,24 @@ body {
 .worn-item {
   background-color: white;
   border-radius: 15px;
+  border: 2px solid rgba(71, 160, 223, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 5px;
+}
+
+.worn-item img {
+  width: 100%;
   height: 150px;
+  object-fit: contain;
+  border-radius: 15px;
+}
+
+.closet-item-label {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #1E3C63;
 }
 
 .nav-menu {

@@ -12,10 +12,10 @@ function Navigation() {
         <img src={home} className="nav-icon" alt="home icon" />
         <span>Home</span>
       </Link>
-      <div className="nav-item">
+      <Link to="/closet" className="nav-item">
         <img src={closet} className="nav-icon" alt="closet icon" />
         <span>Closet</span>
-      </div>
+      </Link>
       <div className="nav-item">
         <img src={settings} className="nav-icon" alt="settings icon" />
         <span>Settings</span>

@@ -7,6 +7,16 @@ import rainy from '../assets/rainy.svg';
 import snowy from '../assets/snowy.svg';
 import edit from '../assets/edit.svg';
 import Navigation from '../components/Navigation';
+import clothingData from '../assets/clothing/clothing.json';
+
+const clothingImages = {
+  "./dress.jpg": require('../assets/clothing/dress.jpg'),
+  "./hoodie.jpg": require('../assets/clothing/hoodie.jpg'),
+  "./jacket.webp": require('../assets/clothing/jacket.webp'),
+  "./jeans.jpg": require('../assets/clothing/jeans.jpg'),
+  "./sweatpants.webp": require('../assets/clothing/sweatpants.webp'),
+  "./tshirt.webp": require('../assets/clothing/tshirt.webp'),
+};
 
 function Home() {
   const [temperature, setTemperature] = useState(null);
@@ -30,6 +40,8 @@ function Home() {
     if (lowerCaseWeather.includes('snowy')) return snowy;
     return sunny;
   };
+
+  const recentlyWornItems = clothingData.filter(item => item.tags.includes('recently worn'));
 
   return (
     <div className="App">
@@ -58,9 +70,12 @@ function Home() {
       <div className="recently-worn">
         <h2>Recently worn</h2>
         <div className="worn-items-grid">
-          <div className="worn-item"></div>
-          <div className="worn-item"></div>
-          <div className="worn-item"></div>
+          {recentlyWornItems.map(item => (
+            <div key={item.id} className="worn-item">
+              <img src={clothingImages[item.src]} alt={item.alt} />
+              <div className="closet-item-label">{item.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
