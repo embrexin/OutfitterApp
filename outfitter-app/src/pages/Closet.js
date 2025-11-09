@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import './Closet.css';
+import camera from '../assets/camera.svg';
 
 const clothingImages = {
   "./dress.jpg": require('../assets/clothing/dress.jpg'),
@@ -31,6 +32,12 @@ function Closet() {
             <div className="closet-item-label">{item.label}</div>
           </div>
         ))}
+      </div>
+      <div className="closet-buttons">
+        <button className="closet-camera-button">
+          <img src={camera} alt="camera" className="camera-icon" />
+          Upload Clothes
+        </button>
       </div>
       <Navigation />
     </div>

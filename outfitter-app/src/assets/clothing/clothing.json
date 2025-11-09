@@ -18,7 +18,8 @@
     "tags": [
       "long sleeve",
       "casual",
-      "outerwear"
+      "outerwear",
+      "recently worn"
     ]
   },
   {
@@ -29,8 +30,7 @@
     "tags": [
       "long sleeve",
       "casual",
-      "outerwear",
-      "recently worn"
+      "outerwear"
     ]
   },
   {
@@ -40,8 +40,7 @@
     "label": "Jeans",
     "tags": [
       "pants",
-      "casual",
-      "recently worn"
+      "casual"
     ]
   },
   {
@@ -52,7 +51,8 @@
     "tags": [
       "pants",
       "casual",
-      "lounge"
+      "lounge",
+      "recently worn"
     ]
   },
   {
@@ -62,8 +62,7 @@
     "label": "T-Shirt",
     "tags": [
       "short sleeve",
-      "casual",
-      "recently worn"
+      "casual"
     ]
   }
 ]
