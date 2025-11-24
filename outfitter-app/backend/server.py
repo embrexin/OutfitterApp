@@ -50,6 +50,16 @@ def update_event(event_id):
             return jsonify({'message': 'Event updated successfully', 'event': updated_event})
     return jsonify({'message': 'Event not found'}), 404
 
+@app.route('/api/delete-event/<event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    events = read_json_file(EVENTS_FILE_PATH)
+    event_to_delete = next((event for event in events if event.get('id') == event_id), None)
+    if event_to_delete:
+        events.remove(event_to_delete)
+        write_json_file(EVENTS_FILE_PATH, events)
+        return jsonify({'message': 'Event deleted successfully'})
+    return jsonify({'message': 'Event not found'}), 404
+
 @app.route('/api/clothing')
 def get_clothing():
     data = read_json_file(CLOTHING_FILE_PATH)

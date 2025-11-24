@@ -1,8 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-body {
+html, body {
   margin: 0;
-  overflow-y: hidden;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Prevent body scroll */
+}
+
+body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,16 +15,20 @@ body {
 
 .App {
   background: linear-gradient(to bottom, white, #C4F4FF);
-  height: 100vh;
-  padding: 20px;
   color: #333;
-  overflow: hidden;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Make App fill the viewport height */
+  overflow: hidden; /* Hide scrollbars from App container itself */
+  position: relative; /* Needed for absolute positioning of header/nav if they were not children */
 }
 
 .header {
   text-align: center;
-  margin-bottom: 20px;
+  padding: 20px 20px 0 20px; /* Apply padding directly to header */
+  /* No margin-bottom, flex handles spacing */
+  background: transparent; /* Allow App background to show through */
+  z-index: 10; /* Ensure header is above scrollable content */
 }
 
 .app-name {
@@ -49,6 +58,13 @@ body {
   padding: 5px 10px;
 }
 
+.home-scrollable-content {
+  flex: 1; /* Take remaining space */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 20px; /* Apply padding here */
+  /* margin: -20px; is removed */
+}
+
 .suggestions-button {
   background-color: #71B87E;
   color: white;
@@ -59,9 +75,10 @@ body {
   font-weight: bold;
   cursor: pointer;
   display: block;
-  margin: 20px;
+  margin: 20px auto; /* Centered margin */
   text-decoration: none;
   text-align: center;
+  width: fit-content;
 }
 
 .suggestions-text {
@@ -69,22 +86,30 @@ body {
 }
 
 .upcoming-events {
-  background-color: white;
-  background-image: linear-gradient(to bottom, #FF8E8E 30%, rgba(0,0,0,0) 20%);
-  border: 2px solid #FF8E8E;
-  border-radius: 15px;
-  padding: 10px;
-  padding-top: 15px;
   margin-top: 0;
-  position: relative;
 }
 
-.upcoming-events h2 {
-  margin-top: 0;
-  font-size: 1.3em;
-  text-align: center;
-  margin-bottom: 30px;
+.upcoming-events-header {
+  background-color: #FF8E8E;
   color: white;
+  padding: 10px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+}
+
+.upcoming-events-header h2 {
+  margin: 0;
+  font-size: 1.3em;
+}
+
+.upcoming-events-content {
+  background-color: white;
+  border: 2px solid #FF8E8E;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding: 10px;
+  position: relative;
 }
 
 .event-list {
@@ -125,6 +150,7 @@ body {
 
 .recently-worn {
   margin-top: 20px;
+  padding-bottom: 80px; /* Adjusted padding-bottom to allow for fixed navigation */
 }
 
 .recently-worn h2 {
@@ -175,6 +201,7 @@ body {
   display: flex;
   justify-content: space-around;
   padding: 15px 0;
+  z-index: 10; /* Ensure navigation is above scrollable content */
 }
 
 .nav-item {

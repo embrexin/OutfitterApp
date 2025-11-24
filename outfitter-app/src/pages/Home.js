@@ -69,44 +69,49 @@ function Home() {
           <div className="weather-info">{weather ? weather : 'Loading...'}</div>
         </div>
       </header>
+      <div className="home-scrollable-content">
+        <Link to="/suggestion" className="suggestions-button">See Today's Suggestion</Link>
 
-      <Link to="/suggestion" className="suggestions-button">See Today's Suggestion</Link>
+        <div className="upcoming-events">
+          <div className="upcoming-events-header">
+            <h2>Upcoming events</h2>
+          </div>
+          <div className="upcoming-events-content">
+            <ul className="event-list">
+              {events.map((event, index) => (
+                <li key={index} className="event-item">
+                  <span>
+                    {(() => {
+                      const eventDateObj = new Date(event.date);
+                      const currentYear = new Date().getFullYear();
+                      const eventYear = eventDateObj.getFullYear();
+                      const options = { month: 'numeric', day: 'numeric' };
+                      if (eventYear !== currentYear) {
+                        options.year = 'numeric';
+                      }
+                      return `${eventDateObj.toLocaleDateString(undefined, options)} ${event.name}`;
+                    })()}
+                  </span>
+                  <Link to={`/add-event/${event.id}`}>
+                    <img src={edit} className="edit-icon" alt="edit icon" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link to="/add-event" className="add-event-button">Add event</Link>
+          </div>
+        </div>
 
-      <div className="upcoming-events">
-        <h2>Upcoming events</h2>
-        <ul className="event-list">
-          {events.map((event, index) => (
-            <li key={index} className="event-item">
-              <span>
-                {(() => {
-                  const eventDateObj = new Date(event.date);
-                  const currentYear = new Date().getFullYear();
-                  const eventYear = eventDateObj.getFullYear();
-                  const options = { month: 'numeric', day: 'numeric' };
-                  if (eventYear !== currentYear) {
-                    options.year = 'numeric';
-                  }
-                  return `${eventDateObj.toLocaleDateString(undefined, options)} ${event.name}`;
-                })()}
-              </span>
-              <Link to={`/add-event/${event.id}`}>
-                <img src={edit} className="edit-icon" alt="edit icon" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <Link to="/add-event" className="add-event-button">Add event</Link>
-      </div>
-
-      <div className="recently-worn">
-        <h2>Recently worn</h2>
-        <div className="worn-items-grid">
-          {recentlyWornItems.map(item => (
-            <div key={item.id} className="worn-item">
-              <img src={clothingImages[item.src]} alt={item.alt} />
-              <div className="closet-item-label">{item.label}</div>
-            </div>
-          ))}
+        <div className="recently-worn">
+          <h2>Recently worn</h2>
+          <div className="worn-items-grid">
+            {recentlyWornItems.map(item => (
+              <div key={item.id} className="worn-item">
+                <img src={clothingImages[item.src]} alt={item.alt} />
+                <div className="closet-item-label">{item.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

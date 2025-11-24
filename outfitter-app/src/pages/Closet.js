@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import './Closet.css';
 import camera from '../assets/camera.svg';
@@ -32,6 +33,15 @@ const getColorForTag = (tag, index) => {
 function Closet() {
   const [clothingData, setClothingData] = useState([]);
   const [activeTags, setActiveTags] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const selectionMode = location.state?.selectionMode;
+  const eventId = location.state?.eventId;
+  const eventName = location.state?.eventName;
+  const eventDate = location.state?.eventDate;
+  const eventDescription = location.state?.eventDescription;
+  const [selectedItems, setSelectedItems] = useState(location.state?.selectedClothing || []);
 
   useEffect(() => {
     fetch('/api/clothing')
@@ -52,6 +62,27 @@ function Closet() {
     );
   };
 
+  const handleItemClick = (item) => {
+    if (!selectionMode) return;
+    setSelectedItems(prev =>
+      prev.some(selected => selected.id === item.id)
+        ? prev.filter(selected => selected.id !== item.id)
+        : [...prev, item]
+    );
+  };
+
+  const handleConfirm = () => {
+    navigate(eventId ? `/add-event/${eventId}` : '/add-event', { 
+      state: { 
+        selectedClothing: selectedItems, 
+        fromCloset: true,
+        eventName: eventName,
+        eventDate: eventDate,
+        eventDescription: eventDescription
+      } 
+    });
+  };
+
   const filteredClothing = activeTags.length > 0
     ? clothingData.filter(item => activeTags.every(tag => item.tags.includes(tag)))
     : clothingData;
@@ -62,45 +93,56 @@ function Closet() {
   ];
 
   return (
-    <div className="App">
+    <div className={`closet-container ${selectionMode ? 'selection-mode' : ''}`}>
+      <div className="closet-overlay"></div>
       <h1 className="closet-header">My Outfitter Closet</h1>
-      <div className="divider"></div>
-      <div className="tags-container">
-        <div
-          className="tag"
-          style={{ backgroundColor: '#FF8E8E', cursor: 'default' }}
-        >
-          {recentlyWornTag}
-        </div>
-        {displayedTags.map((tag, index) => (
+      <div className="closet-scrollable-content">
+        <div className="divider"></div>
+        <div className="tags-container">
           <div
-            key={tag}
-            className={`tag ${activeTags.includes(tag) ? 'active-tag' : ''}`}
-            onClick={() => handleTagClick(tag)}
-            style={{
-              backgroundColor: activeTags.includes(tag)
-                ? '#47A0DF'
-                : getColorForTag(tag, index),
-            }}
+            className="tag"
+            style={{ backgroundColor: '#FF8E8E', cursor: 'default' }}
           >
-            {tag}
+            {recentlyWornTag}
           </div>
-        ))}
-      </div>
-      <div className="closet-content-scroll">
+          {displayedTags.map((tag, index) => (
+            <div
+              key={tag}
+              className={`tag ${activeTags.includes(tag) ? 'active-tag' : ''}`}
+              onClick={() => handleTagClick(tag)}
+              style={{
+                backgroundColor: activeTags.includes(tag)
+                  ? '#47A0DF'
+                  : getColorForTag(tag, index),
+              }}
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
         <div className="closet-grid">
           {filteredClothing.map(item => (
-            <div key={item.id} className={`closet-item ${item.tags.includes('recently worn') ? 'closet-worn-item' : ''}`}>
+            <div
+              key={item.id}
+              className={`closet-item ${item.tags.includes('recently worn') ? 'closet-worn-item' : ''} ${selectedItems.some(selected => selected.id === item.id) ? 'selected-item' : ''}`}
+              onClick={() => handleItemClick(item)}
+            >
               <img src={clothingImages[item.src]} alt={item.alt} />
               <div className="closet-item-label">{item.label}</div>
             </div>
           ))}
         </div>
         <div className="closet-buttons">
-          <button className="closet-camera-button">
-            <img src={camera} alt="camera" className="camera-icon" />
-            Upload Clothes
-          </button>
+          {selectionMode ? (
+            <button className="confirm-button" onClick={handleConfirm}>
+              Confirm
+            </button>
+          ) : (
+            <button className="closet-camera-button">
+              <img src={camera} alt="camera" className="camera-icon" />
+              Upload Clothes
+            </button>
+          )}
         </div>
       </div>
       <Navigation />
