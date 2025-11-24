@@ -39,7 +39,7 @@
   }
   
   .done-button {
-    background-color: #ffc0cb; /* Pink */
+    background-color: #4CAF50; /* Pink */
     color: white;
     padding: 15px;
     border: none;
@@ -49,10 +49,11 @@
     text-align: center;
     text-decoration: none;
     margin-top: 20px;
+    transition: background-color 0.2s ease-in-out;
   }
   
   .done-button:hover {
-    background-color: #ffb3c1;
+    background-color: #3f9942;
   }
 
   .delete-button {
@@ -121,6 +122,7 @@
     text-align: center;
     text-decoration: none;
     margin-top: 20px;
+    transition: background-color 0.2s ease-in-out;
   }
   
   .add-clothes-button:hover {
