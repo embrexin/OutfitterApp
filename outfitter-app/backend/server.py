@@ -65,6 +65,36 @@ def get_clothing():
     data = read_json_file(CLOTHING_FILE_PATH)
     return jsonify(data)
 
+@app.route('/api/clothing/<int:item_id>/save', methods=['POST'])
+def save_item(item_id):
+    clothing_data = read_json_file(CLOTHING_FILE_PATH)
+    item_found = False
+    for item in clothing_data:
+        if item['id'] == item_id:
+            if 'saved' not in item['tags']:
+                item['tags'].append('saved')
+            item_found = True
+            break
+    if item_found:
+        write_json_file(CLOTHING_FILE_PATH, clothing_data)
+        return jsonify({'message': 'Item saved successfully'})
+    return jsonify({'message': 'Item not found'}), 404
+
+@app.route('/api/clothing/<int:item_id>/unsave', methods=['POST'])
+def unsave_item(item_id):
+    clothing_data = read_json_file(CLOTHING_FILE_PATH)
+    item_found = False
+    for item in clothing_data:
+        if item['id'] == item_id:
+            if 'saved' in item['tags']:
+                item['tags'].remove('saved')
+            item_found = True
+            break
+    if item_found:
+        write_json_file(CLOTHING_FILE_PATH, clothing_data)
+        return jsonify({'message': 'Item unsaved successfully'})
+    return jsonify({'message': 'Item not found'}), 404
+
 @app.route('/api/wear-items', methods=['POST'])
 def wear_items():
     data = request.get_json()

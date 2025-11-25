@@ -20,6 +20,12 @@
   z-index: 5;
 }
 
+.closet-overlay.active {
+    display: block;
+    z-index: 15;
+    animation: overlay-fade-in 0.2s ease-out;
+}
+
 .closet-header {
   margin-top: 30px;
   font-size: 2em;
@@ -88,7 +94,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  padding-bottom: 80px; /* Space for the buttons and nav bar */
+  padding-bottom: 80px;
 }
 
 .closet-item {
@@ -99,6 +105,16 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 5px;
+  position: relative;
+}
+
+.saved-star {
+    position: absolute;
+    top: -8vh;
+    right: -2vw; 
+    max-width: 30px;
+    z-index: 1;
+    animation: star-pop-in 0.3s ease-out; /* Added animation */
 }
 
 .closet-item img {
@@ -177,4 +193,77 @@
   cursor: pointer;
   width: 300px;
   text-align: center;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    animation: popup-fade-in 0.2s ease-out;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.popup-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.save-for-later-button {
+    background-color: #47A0DF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Keyframes for animations */
+@keyframes popup-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes star-pop-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import './Closet.css';
 import camera from '../assets/camera.svg';
+import star from '../assets/star.svg';
 
 const clothingImages = {
   "./dress.jpg": require('../assets/clothing/dress.jpg'),
@@ -33,6 +34,8 @@ const getColorForTag = (tag, index) => {
 function Closet() {
   const [clothingData, setClothingData] = useState([]);
   const [activeTags, setActiveTags] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [selectedItemPopup, setSelectedItemPopup] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -43,15 +46,19 @@ function Closet() {
   const eventDescription = location.state?.eventDescription;
   const [selectedItems, setSelectedItems] = useState(location.state?.selectedClothing || []);
 
-  useEffect(() => {
+  const fetchClothingData = () => {
     fetch('/api/clothing')
       .then(res => res.json())
       .then(data => setClothingData(data));
+  };
+
+  useEffect(() => {
+    fetchClothingData();
   }, []);
 
   const allTags = Array.from(new Set(clothingData.flatMap(item => item.tags)));
   const recentlyWornTag = "recently worn";
-  const otherTags = allTags.filter(tag => tag !== recentlyWornTag);
+  const otherTags = allTags.filter(tag => tag !== recentlyWornTag && tag !== 'saved');
 
   const handleTagClick = (tag) => {
     if (tag === recentlyWornTag) return;
@@ -62,13 +69,43 @@ function Closet() {
     );
   };
 
-  const handleItemClick = (item) => {
-    if (!selectionMode) return;
-    setSelectedItems(prev =>
-      prev.some(selected => selected.id === item.id)
-        ? prev.filter(selected => selected.id !== item.id)
-        : [...prev, item]
-    );
+  const handleItemClick = (e, item) => {
+    if (e.target.classList.contains('saved-star')) {
+      handleUnsave(item.id);
+      return;
+    }
+    if (selectionMode) {
+      setSelectedItems(prev =>
+        prev.some(selected => selected.id === item.id)
+          ? prev.filter(selected => selected.id !== item.id)
+          : [...prev, item]
+      );
+    } else {
+      setSelectedItemPopup(item);
+      setIsPopupVisible(true);
+    }
+  };
+
+  const handleSaveForLater = (itemId) => {
+    fetch(`/api/clothing/${itemId}/save`, { method: 'POST' })
+      .then(res => res.json())
+      .then(() => {
+        fetchClothingData(); // Refetch data to get the updated list
+        closePopup();
+      });
+  };
+
+  const handleUnsave = (itemId) => {
+    fetch(`/api/clothing/${itemId}/unsave`, { method: 'POST' })
+    .then(res => res.json())
+    .then(() => {
+      fetchClothingData(); // Refetch data to get the updated list
+    });
+  };
+
+  const closePopup = () => {
+    setIsPopupVisible(false);
+    setSelectedItemPopup(null);
   };
 
   const handleConfirm = () => {
@@ -94,7 +131,7 @@ function Closet() {
 
   return (
     <div className={`closet-container ${selectionMode ? 'selection-mode' : ''}`}>
-      <div className="closet-overlay"></div>
+      <div className={`closet-overlay ${isPopupVisible ? 'active' : ''}`} onClick={closePopup}></div>
       <h1 className="closet-header">My Outfitter Closet</h1>
       <div className="closet-scrollable-content">
         <div className="divider"></div>
@@ -125,8 +162,9 @@ function Closet() {
             <div
               key={item.id}
               className={`closet-item ${item.tags.includes('recently worn') ? 'closet-worn-item' : ''} ${selectedItems.some(selected => selected.id === item.id) ? 'selected-item' : ''}`}
-              onClick={() => handleItemClick(item)}
+              onClick={(e) => handleItemClick(e, item)}
             >
+              {item.tags.includes('saved') && <img src={star} alt="saved" className="saved-star" />}
               <img src={clothingImages[item.src]} alt={item.alt} />
               <div className="closet-item-label">{item.label}</div>
             </div>
@@ -145,6 +183,16 @@ function Closet() {
           )}
         </div>
       </div>
+      {isPopupVisible && selectedItemPopup && (
+        <div className="popup" onClick={closePopup}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <img src={clothingImages[selectedItemPopup.src]} alt={selectedItemPopup.alt} className="popup-img" />
+            <button className="save-for-later-button" onClick={() => handleSaveForLater(selectedItemPopup.id)}>
+              Save for Later
+            </button>
+          </div>
+        </div>
+      )}
       <Navigation />
     </div>
   );
