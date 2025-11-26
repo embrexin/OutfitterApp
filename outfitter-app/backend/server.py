@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import json
 import uuid
 from weather import get_current_weather
 
 app = Flask(__name__)
+CORS(app)
 
 CLOTHING_FILE_PATH = '../src/assets/clothing/clothing.json'
 EVENTS_FILE_PATH = './events.json'
@@ -64,6 +66,56 @@ def delete_event(event_id):
 def get_clothing():
     data = read_json_file(CLOTHING_FILE_PATH)
     return jsonify(data)
+
+@app.route('/api/clothing/manual-upload', methods=['POST'])
+def manual_upload_clothing():
+    """
+    Upload clothing item with manual classification (no API needed)
+    """
+    try:
+        data = request.get_json()
+
+        if not data or 'category' not in data or 'image' not in data:
+            return jsonify({'error': 'Missing category or image data'}), 400
+
+        category = data['category']
+        image_base64 = data['image']
+
+        # Get current clothing data
+        clothing_data = read_json_file(CLOTHING_FILE_PATH)
+
+        # Generate new ID
+        max_id = max([item['id'] for item in clothing_data]) if clothing_data else 0
+        new_id = max_id + 1
+
+        # Create new clothing item
+        new_item = {
+            "id": new_id,
+            "label": category.capitalize(),
+            "name": category.capitalize(),
+            "src": f"./uploaded_{new_id}.jpg",
+            "image": image_base64,  # Store base64 image data
+            "alt": category,
+            "tags": []
+        }
+
+        # Add to clothing data
+        clothing_data.append(new_item)
+        write_json_file(CLOTHING_FILE_PATH, clothing_data)
+
+        return jsonify({
+            'message': 'Clothing item added successfully',
+            'item': {
+                'id': new_id,
+                'name': category.capitalize(),
+                'category': category
+            }
+        }), 200
+
+    except Exception as e:
+        print(f"Upload error: {str(e)}")
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
 
 @app.route('/api/clothing/<int:item_id>/save', methods=['POST'])
 def save_item(item_id):
