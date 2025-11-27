@@ -64,6 +64,13 @@ function Settings() {
         </div>
       </div>
 
+     <div className="settings-box clickable"> #added
+    <a href="/auth" style={{ textDecoration: "none", color: "inherit" }}>
+      Log In / Sign Up
+    </a>
+  </div>
+</div> #added 
+
       <div className="settings-section">
         <h2 className="settings-subheader">Weather</h2>
         <div className="settings-toggles-container">
