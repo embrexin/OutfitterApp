@@ -75,6 +75,8 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/add-event/:eventId" element={<AddEvent />} />
+        <Route path="/auth" element={<Auth />} /> #added 
+
       </Routes>
     </Router>
   );
