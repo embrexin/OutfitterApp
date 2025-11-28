@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import './Settings.css';
 
 function Settings() {
+  const navigate = useNavigate();
   const [dailySuggestions, setDailySuggestions] = useState(true);
   const [weatherChanges, setWeatherChanges] = useState(true);
   const [plannedEvents, setPlannedEvents] = useState(true);
@@ -60,6 +62,9 @@ function Settings() {
           </div>
           <div className="settings-box clickable">
             <span>Log Out</span>
+          </div>
+          <div className="settings-box clickable" onClick={() => navigate("/auth")}>
+            <span>Log In / Sign Up</span>
           </div>
         </div>
       </div>
