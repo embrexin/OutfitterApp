@@ -57,8 +57,10 @@ function Closet() {
   const eventDescription = location.state?.eventDescription;
   const [selectedItems, setSelectedItems] = useState(location.state?.selectedClothing || []);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const fetchClothingData = () => {
-    fetch('/api/clothing')
+    fetch(`${apiUrl}/api/clothing`)
       .then(res => res.json())
       .then(data => setClothingData(data));
   };
@@ -107,7 +109,7 @@ function Closet() {
   };
 
   const handleSaveForLater = (itemId) => {
-    fetch(`/api/clothing/${itemId}/save`, { method: 'POST' })
+    fetch(`${apiUrl}/api/clothing/${itemId}/save`, { method: 'POST' })
       .then(res => res.json())
       .then(() => {
         fetchClothingData();
@@ -116,7 +118,7 @@ function Closet() {
   };
 
   const handleUnsave = (itemId) => {
-    fetch(`/api/clothing/${itemId}/unsave`, { method: 'POST' })
+    fetch(`${apiUrl}/api/clothing/${itemId}/unsave`, { method: 'POST' })
     .then(res => res.json())
     .then(() => {
       fetchClothingData();
@@ -293,7 +295,7 @@ function Closet() {
           image: base64Image
         };
 
-        const response = await fetch('http://localhost:5001/api/clothing/manual-upload', {
+        const response = await fetch(`${apiUrl}/api/clothing/manual-upload`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -368,15 +370,13 @@ function Closet() {
 
   // Get image source for display
   const getImageSrc = (item) => {
+    // For newly uploaded images stored as base64
     if (item.image && item.image.startsWith('data:')) {
       return item.image;
     }
-
-    try {
-      return require(`../assets/clothing/${item.src.substring(2)}`);
-    } catch (err) {
-      return item.src;
-    }
+    // For existing images, construct the public path
+    const imageName = item.src.substring(item.src.lastIndexOf('/') + 1);
+    return `/images/${imageName}`;
   };
 
   return (

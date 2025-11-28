@@ -13,13 +13,21 @@ function App() {
   const [isFading, setIsFading] = useState(false);
   const [temperature, setTemperature] = useState(null);
   const [weather, setWeather] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const fetchWeather = async () => {
     try {
-      const res = await fetch('/api/weather');
+      const res = await fetch(`${apiUrl}/api/weather`);
       const data = await res.json();
-      setTemperature(data[0]);
-      setWeather(data[1].split(' ')[0]);
+      
+      // Add robust check for data structure
+      if (res.ok && Array.isArray(data) && data.length >= 2) {
+        setTemperature(data[0]);
+        setWeather(data[1].split(' ')[0]);
+      } else {
+        // Handle cases where API returns an error JSON like { "error": "..." }
+        console.error("Failed to fetch weather, received:", data);
+      }
       return true; // Indicate success
     } catch (error) {
       console.error("Failed to fetch weather:", error);

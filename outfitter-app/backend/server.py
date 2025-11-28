@@ -7,7 +7,7 @@ from weather import get_current_weather
 app = Flask(__name__)
 CORS(app)
 
-CLOTHING_FILE_PATH = '../src/assets/clothing/clothing.json'
+CLOTHING_FILE_PATH = './clothing.json'
 EVENTS_FILE_PATH = './events.json'
 
 def read_json_file(file_path):

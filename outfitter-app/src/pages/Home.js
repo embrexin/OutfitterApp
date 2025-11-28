@@ -13,6 +13,7 @@ function Home({ temperature, weather }) { // Accept temperature and weather as p
   const [events, setEvents] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [showEvents, setShowEvents] = useState(true);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   // Remove fetchWeather function and related weather state/effect from here
   useEffect(() => {
@@ -28,18 +29,18 @@ function Home({ temperature, weather }) { // Accept temperature and weather as p
   }, []); // Empty dependency array for effects that run once
 
   useEffect(() => {
-    fetch('/api/clothing')
+    fetch(`${apiUrl}/api/clothing`)
       .then(res => res.json())
       .then(data => setClothingData(data));
 
-    fetch('/api/events')
+    fetch(`${apiUrl}/api/events`)
       .then(res => res.json())
       .then(data => {
         const upcomingEvents = data
           .slice(0, 3);
         setEvents(upcomingEvents);
       });
-  }, []);
+  }, [apiUrl]);
 
   const getWeatherIcon = (weather) => {
     if (!weather) return sunny;
@@ -101,7 +102,7 @@ function Home({ temperature, weather }) { // Accept temperature and weather as p
           <div className="worn-items-grid">
             {recentlyWornItems.map(item => (
               <div key={item.id} className="worn-item">
-                <img src={require(`../assets/clothing/${item.src.substring(2)}`)} alt={item.alt} />
+                <img src={`/images/${item.src.substring(2)}`} alt={item.alt} />
                 <div className="closet-item-label">{item.label}</div>
               </div>
             ))}

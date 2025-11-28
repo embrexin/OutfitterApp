@@ -3,21 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import './Suggestion.css';
 import Navigation from '../components/Navigation';
-import hoodie from '../assets/clothing/hoodie.jpg';
-import sweatpants from '../assets/clothing/sweatpants.webp';
 import checkbox from '../assets/checkbox.svg';
 
 const initialSuggestedItems = [
   {
     id: 2, // Matching the id from clothing.json
     label: 'Hoodie',
-    src: hoodie,
+    src: '/images/hoodie.jpg',
     alt: 'hoodie'
   },
   {
     id: 5, // Matching the id from clothing.json
     label: 'Sweatpants',
-    src: sweatpants,
+    src: '/images/sweatpants.webp',
     alt: 'sweatpants'
   }
 ];
@@ -27,19 +25,20 @@ function Suggestion() {
   const [suggestedItems, setSuggestedItems] = useState(initialSuggestedItems);
   const [isWorn, setIsWorn] = useState(false);
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    fetch('/api/weather')
+    fetch(`${apiUrl}/api/weather`)
       .then(res => res.json())
       .then(data => {
         setTemperature(data[0]);
       });
-  }, []);
+  }, [apiUrl]);
 
   const handleWearClick = () => {
     const item_ids = suggestedItems.map(item => item.id);
 
-    fetch('/api/wear-items', {
+    fetch(`${apiUrl}/api/wear-items`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
