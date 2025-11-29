@@ -24,6 +24,11 @@ const CLOTHING_CATEGORIES = [
   "blazer", "cardigan", "tank top", "blouse", "suit"
 ];
 
+const TAGS = [
+  "outerwear", "casual", "formal", "long sleeve", "short sleeve", "lounge",
+  "summer", "winter", "athletic", "party"
+];
+
 const getColorForTag = (tag, index) => {
   return tagColors[index % tagColors.length];
 };
@@ -40,6 +45,7 @@ function Closet() {
   const [capturedImageUrl, setCapturedImageUrl] = useState(null);
   const [showClassification, setShowClassification] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [error, setError] = useState(null);
@@ -271,6 +277,14 @@ function Closet() {
     }
   };
 
+  const handleTagSelection = (tag) => {
+  setSelectedTags(prev =>
+    prev.includes(tag)
+      ? prev.filter(t => t !== tag)
+      : [...prev, tag]
+    );
+  };
+
   // Upload image with manual classification
   const uploadImage = async () => {
     if (!capturedImage || !selectedCategory) {
@@ -290,6 +304,7 @@ function Closet() {
 
         const newItem = {
           category: selectedCategory,
+          tags: selectedTags,
           image: base64Image
         };
 
@@ -304,7 +319,8 @@ function Closet() {
         const data = await response.json();
 
         if (response.ok) {
-          setUploadStatus(`✓ Added: ${selectedCategory}`);
+          const tagsText = selectedTags.length > 0 ? ` (${selectedTags.join(', ')})` : '';
+          setUploadStatus(`✓ Added: ${selectedCategory}${tagsText}`);
           fetchClothingData();
 
           setTimeout(() => {
@@ -315,6 +331,7 @@ function Closet() {
             setCapturedImage(null);
             setCapturedImageUrl(null);
             setSelectedCategory('');
+            setSelectedTags([]);
             setShowClassification(false);
             setUploadStatus(null);
             setUploading(false);
@@ -350,6 +367,7 @@ function Closet() {
     setCapturedImage(null);
     setCapturedImageUrl(null);
     setSelectedCategory('');
+    setSelectedTags([]);
     setShowClassification(false);
     // Open file selector again
     fileInputRef.current.click();
@@ -363,6 +381,7 @@ function Closet() {
     setCapturedImage(null);
     setCapturedImageUrl(null);
     setSelectedCategory('');
+    setSelectedTags([]);
     setShowClassification(false);
   };
 
@@ -382,6 +401,14 @@ function Closet() {
   return (
     <div className={`closet-container ${selectionMode ? 'selection-mode' : ''}`}>
       <div className={`closet-overlay ${isPopupVisible ? 'active' : ''}`} onClick={closePopup}></div>
+
+      <input
+        ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+      />
 
       {error && (
         <div className="error-banner">
@@ -420,6 +447,30 @@ function Closet() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="tag-selection">
+            <label>Select tags (optional):</label>
+            <div className="tags-checkbox-container">
+              {TAGS.map(tag => (
+                <div
+                  key={tag}
+                  className={`tag-checkbox-item ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                  onClick={() => handleTagSelection(tag)}
+                >
+                  <input
+                    type="checkbox"
+                    id={`tag-${tag}`}
+                    checked={selectedTags.includes(tag)}
+                    onChange={() => handleTagSelection(tag)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <label htmlFor={`tag-${tag}`}>
+                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="classification-controls">
@@ -517,13 +568,7 @@ function Closet() {
                     <img src={camera} alt="camera" className="camera-icon" />
                     Upload Clothes
                   </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileSelect}
-                    style={{ display: 'none' }}
-                  />
+
                 </>
               )}
             </div>

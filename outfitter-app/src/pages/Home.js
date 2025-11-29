@@ -53,6 +53,20 @@ function Home({ temperature, weather }) { // Accept temperature and weather as p
 
   const recentlyWornItems = clothingData.filter(item => item.tags.includes('recently worn'));
 
+  const getImageSrc = (item) => {
+  // If the item has a base64 image, use it
+  if (item.image && item.image.startsWith('data:')) {
+    return item.image;
+  }
+
+  // Otherwise try to load from assets
+  try {
+    return require(`../assets/clothing/${item.src.substring(2)}`);
+  } catch (err) {
+    return item.src;
+  }
+};
+
   return (
     <div className="App">
       <header className="header">
@@ -101,7 +115,7 @@ function Home({ temperature, weather }) { // Accept temperature and weather as p
           <div className="worn-items-grid">
             {recentlyWornItems.map(item => (
               <div key={item.id} className="worn-item">
-                <img src={require(`../assets/clothing/${item.src.substring(2)}`)} alt={item.alt} />
+                <img src={getImageSrc(item)} alt={item.alt} />
                 <div className="closet-item-label">{item.label}</div>
               </div>
             ))}

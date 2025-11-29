@@ -17,7 +17,7 @@ function AddEvent() {
     if (location.state?.selectedClothing) {
       setSelectedClothing(location.state.selectedClothing);
     }
-    
+
     if (location.state?.fromCloset) {
       setEventName(location.state.eventName || '');
       setEventDate(location.state.eventDate || '');
@@ -94,6 +94,20 @@ function AddEvent() {
       });
   };
 
+  const getImageSrc = (item) => {
+  // If the item has a base64 image, use it
+  if (item.image && item.image.startsWith('data:')) {
+    return item.image;
+  }
+
+  // Otherwise try to load from assets
+  try {
+    return require(`../assets/clothing/${item.src.substring(2)}`);
+  } catch (err) {
+    return item.src;
+  }
+};
+
   return (
     <div className="add-event-container">
       <div className="scrollable-content">
@@ -137,7 +151,7 @@ function AddEvent() {
               <div className="selected-clothing-grid">
                 {selectedClothing.map(item => (
                   <div key={item.id} className="selected-clothing-item">
-                    <img src={require(`../assets/clothing/${item.src.substring(2)}`)} alt={item.alt} />
+                    <img src={getImageSrc(item)} alt={item.alt} />
                     <p>{item.label}</p>
                   </div>
                 ))}

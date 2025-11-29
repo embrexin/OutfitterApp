@@ -3,6 +3,7 @@ from flask_cors import CORS
 import json
 import uuid
 from weather import get_current_weather
+from suggester import suggest_outfit_for_api
 
 app = Flask(__name__)
 CORS(app)
@@ -79,6 +80,7 @@ def manual_upload_clothing():
             return jsonify({'error': 'Missing category or image data'}), 400
 
         category = data['category']
+        tags = data.get('tags', [])
         image_base64 = data['image']
 
         # Get current clothing data
@@ -96,7 +98,7 @@ def manual_upload_clothing():
             "src": f"./uploaded_{new_id}.jpg",
             "image": image_base64,  # Store base64 image data
             "alt": category,
-            "tags": []
+            "tags": tags
         }
 
         # Add to clothing data
@@ -176,6 +178,29 @@ def weather():
         return jsonify(weather_data)
     else:
         return jsonify({'error': 'Could not retrieve weather data'}), 500
+
+@app.route('/api/suggest-outfit')
+def suggest_outfit():
+    """
+    Generate smart outfit suggestion based on weather and clothing inventory
+    """
+    try:
+        # Get current weather
+        weather_data = get_current_weather()
+        if weather_data is None:
+            return jsonify({'error': 'Could not retrieve weather data'}), 500
+
+        # Get clothing inventory
+        clothing_data = read_json_file(CLOTHING_FILE_PATH)
+
+        # Generate suggestion
+        suggestion = suggest_outfit_for_api(clothing_data, weather_data)
+
+        return jsonify(suggestion)
+
+    except Exception as e:
+        print(f"Error generating outfit suggestion: {str(e)}")
+        return jsonify({'error': 'Failed to generate outfit suggestion'}), 500
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
