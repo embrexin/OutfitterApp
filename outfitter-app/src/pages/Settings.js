@@ -62,9 +62,6 @@ function Settings() {
       <div className="settings-section">
         <h2 className="settings-subheader">Account</h2>
         <div className="settings-box-container">
-          <div className="settings-box clickable">
-            <span>Profile Information</span>
-          </div>
           <div className="settings-box clickable" onClick={handleLogout}>
             <span>Log Out</span>
           </div>
