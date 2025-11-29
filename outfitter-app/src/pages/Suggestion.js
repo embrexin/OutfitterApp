@@ -17,7 +17,7 @@ function Suggestion() {
 
   useEffect(() => {
     // Fetch smart outfit suggestion
-    fetch('/api/suggest-outfit')
+    fetch(`${apiUrl}/api/suggest-outfit`)
       .then(res => res.json())
       .then(data => {
         console.log('Suggestion data:', data);

@@ -191,21 +191,32 @@ def suggest_outfit():
     Generate smart outfit suggestion based on weather and clothing inventory
     """
     try:
+        print("Attempting to generate outfit suggestion...")
+
         # Get current weather
+        print("Fetching weather data...")
         weather_data = get_current_weather()
+        print(f"Weather data received: {weather_data}")
         if weather_data is None:
+            print("Weather data is None, returning error.")
             return jsonify({'error': 'Could not retrieve weather data'}), 500
 
         # Get clothing inventory
+        print("Reading clothing data...")
         clothing_data = read_json_file(CLOTHING_FILE_PATH)
+        print(f"Clothing data read successfully. Number of items: {len(clothing_data)}")
 
         # Generate suggestion
+        print("Generating outfit suggestion...")
         suggestion = suggest_outfit_for_api(clothing_data, weather_data)
+        print(f"Suggestion generated: {suggestion}")
 
         return jsonify(suggestion)
 
     except Exception as e:
-        print(f"Error generating outfit suggestion: {str(e)}")
+        import traceback
+        print(f"An error occurred in /api/suggest-outfit: {str(e)}")
+        print(traceback.format_exc())
         return jsonify({'error': 'Failed to generate outfit suggestion'}), 500
 
 if __name__ == '__main__':

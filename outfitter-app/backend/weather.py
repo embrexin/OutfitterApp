@@ -4,10 +4,11 @@ import requests
 def get_current_weather():
     g = geocoder.ip('me')
     if not g.latlng:
-        print("Unable to retrieve your location.")
-        return None
+        print("Unable to retrieve your location. Using default location (New York City).")
+        lat, lon = 40.7128, -74.0060  # Default to New York City
+    else:
+        lat, lon = g.latlng
 
-    lat, lon = g.latlng
     url = "https://api.open-meteo.com/v1/forecast"
     params = {"latitude": lat, "longitude": lon, "current_weather": True}
     r = requests.get(url, params=params)

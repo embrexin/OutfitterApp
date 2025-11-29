@@ -187,7 +187,7 @@ class OutfitSuggester:
                              for item in categories['complete']]
             scored_complete.sort(key=lambda x: x[1], reverse=True)
 
-            if scored_complete[0][1] > 0:  # If score is positive
+            if scored_complete and scored_complete[0][1] > 0:  # If score is positive
                 outfit.append(scored_complete[0][0])
 
                 # Add light outerwear for cool weather
@@ -197,7 +197,7 @@ class OutfitSuggester:
                                   if item.get('label', '').lower() in ['cardigan', 'blazer', 'jacket']]
                     if scored_outer:
                         scored_outer.sort(key=lambda x: x[1], reverse=True)
-                        if scored_outer[0][1] > 0:
+                        if scored_outer and scored_outer[0][1] > 0:
                             outfit.append(scored_outer[0][0])
 
                 return outfit, reasoning
@@ -208,7 +208,7 @@ class OutfitSuggester:
             scored_tops = [(item, self.score_item(item, temp_category))
                           for item in categories['tops']]
             scored_tops.sort(key=lambda x: x[1], reverse=True)
-            if scored_tops[0][1] > 0:
+            if scored_tops and scored_tops[0][1] > 0:
                 outfit.append(scored_tops[0][0])
 
         # 2. Select bottom
@@ -216,7 +216,7 @@ class OutfitSuggester:
             scored_bottoms = [(item, self.score_item(item, temp_category))
                             for item in categories['bottoms']]
             scored_bottoms.sort(key=lambda x: x[1], reverse=True)
-            if scored_bottoms[0][1] > 0:
+            if scored_bottoms and scored_bottoms[0][1] > 0:
                 outfit.append(scored_bottoms[0][0])
 
         # 3. Add outerwear if needed (cold weather or rainy)
@@ -226,8 +226,16 @@ class OutfitSuggester:
                 scored_outer = [(item, self.score_item(item, temp_category))
                               for item in categories['outerwear']]
                 scored_outer.sort(key=lambda x: x[1], reverse=True)
-                if scored_outer[0][1] > 0:
+                if scored_outer and scored_outer[0][1] > 0:
                     outfit.append(scored_outer[0][0])
+
+        # If no outfit could be generated, create a default one
+        if not outfit:
+            reasoning.append("Could not find a perfect match, but here's a suggestion.")
+            if categories['tops']:
+                outfit.append(random.choice(categories['tops']))
+            if categories['bottoms']:
+                outfit.append(random.choice(categories['bottoms']))
 
         # Add user preference note if applicable
         saved_items = [item for item in outfit if 'saved' in item.get('tags', [])]
@@ -248,7 +256,11 @@ def suggest_outfit_for_api(clothing_data: List[Dict], weather_data: Tuple[float,
     Returns:
         Dict with outfit items and reasoning
     """
-    temperature, weather = weather_data
+    if weather_data is None:
+        # Default to a mild temperature if weather is unavailable
+        temperature, weather = 65, "Unknown 🌍"
+    else:
+        temperature, weather = weather_data
 
     suggester = OutfitSuggester(clothing_data, temperature, weather)
     outfit, reasoning = suggester.suggest_outfit()
@@ -259,7 +271,7 @@ def suggest_outfit_for_api(clothing_data: List[Dict], weather_data: Tuple[float,
                 'id': item['id'],
                 'label': item['label'],
                 'src': item['src'],
-                'image': item.get('image'),  # ← Add this line
+                'image': item.get('image'),
                 'alt': item.get('alt', item['label'].lower())
             }
             for item in outfit
