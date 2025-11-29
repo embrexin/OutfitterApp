@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
 import json
 import uuid
 from weather import get_current_weather
@@ -8,8 +9,13 @@ from suggester import suggest_outfit_for_api
 app = Flask(__name__)
 CORS(app)
 
-CLOTHING_FILE_PATH = './clothing.json'
-EVENTS_FILE_PATH = './events.json'
+# Get the absolute path to the directory where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct absolute paths to the JSON files
+CLOTHING_FILE_PATH = os.path.join(script_dir, 'clothing.json')
+EVENTS_FILE_PATH = os.path.join(script_dir, 'events.json')
+
 
 def read_json_file(file_path):
     with open(file_path, 'r') as f:
