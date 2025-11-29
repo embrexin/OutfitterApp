@@ -122,6 +122,11 @@
   background-color: #FF8E8E !important; /* Pink color for recently worn */
 }
 
+.recently-worn-tag-style.active-tag .tag-x-button {
+  color: #FF8E8E;
+  border: 2px solid #FF8E8E;
+}
+
 .closet-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -500,12 +505,10 @@
 .classification-controls {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  right: 20px;
   display: flex;
   justify-content: center;
   gap: 10px;
-  padding: 20px;
+  width: 100%;
   background: linear-gradient(to top, #C4F4FF, transparent);
   z-index: 1001;
 }

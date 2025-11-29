@@ -163,15 +163,15 @@ class OutfitSuggester:
 
         # Add temperature reasoning
         if temp_category == 'very_cold':
-            reasoning.append(f"It's freezing at {int(self.temperature)}°F - bundle up!")
+            reasoning.append(f"It's freezing at {int(self.temperature)}°F - Bundle up!")
         elif temp_category == 'cold':
-            reasoning.append(f"Cold at {int(self.temperature)}°F - stay warm with layers")
+            reasoning.append(f"Cold at {int(self.temperature)}°F - Stay warm with layers")
         elif temp_category == 'cool':
-            reasoning.append(f"Cool at {int(self.temperature)}°F - light layers recommended")
+            reasoning.append(f"Cool at {int(self.temperature)}°F - Light layers recommended")
         elif temp_category == 'warm':
-            reasoning.append(f"Warm at {int(self.temperature)}°F - keep it light")
+            reasoning.append(f"Warm at {int(self.temperature)}°F - Keep it light")
         elif temp_category == 'hot':
-            reasoning.append(f"Hot at {int(self.temperature)}°F - stay cool!")
+            reasoning.append(f"Hot at {int(self.temperature)}°F - Stay cool!")
 
         # Add weather reasoning
         if 'rainy' in self.weather:
