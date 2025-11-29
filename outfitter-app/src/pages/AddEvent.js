@@ -12,6 +12,8 @@ function AddEvent() {
   const { eventId } = useParams();
   const location = useLocation();
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // If we have selected clothing from the closet, prioritize it.
     if (location.state?.selectedClothing) {
@@ -26,7 +28,7 @@ function AddEvent() {
 
     // If we are editing an event, fetch its data.
     if (eventId && !location.state?.fromCloset) {
-      fetch(`/api/event/${eventId}`)
+      fetch(`${apiUrl}/api/event/${eventId}`)
         .then(res => res.json())
         .then(data => {
           setEventName(data.name);
@@ -38,7 +40,7 @@ function AddEvent() {
           }
         });
     }
-  }, [eventId, location.state]);
+  }, [eventId, location.state, apiUrl]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +51,7 @@ function AddEvent() {
       clothing: selectedClothing,
     };
 
-    const url = eventId ? `/api/update-event/${eventId}` : '/api/add-event';
+    const url = eventId ? `${apiUrl}/api/update-event/${eventId}` : `${apiUrl}/api/add-event`;
     const method = eventId ? 'PUT' : 'POST';
 
     if (eventId) {
@@ -84,7 +86,7 @@ function AddEvent() {
   };
 
   const handleDelete = () => {
-    fetch(`/api/delete-event/${eventId}`, {
+    fetch(`${apiUrl}/api/delete-event/${eventId}`, {
       method: 'DELETE',
     })
       .then(res => res.json())

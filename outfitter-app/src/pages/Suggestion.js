@@ -13,6 +13,7 @@ function Suggestion() {
   const [isWorn, setIsWorn] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     // Fetch smart outfit suggestion
@@ -75,7 +76,7 @@ function Suggestion() {
   const handleWearClick = () => {
     const item_ids = suggestedItems.map(item => item.id);
 
-    fetch('/api/wear-items', {
+    fetch(`${apiUrl}/api/wear-items`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
