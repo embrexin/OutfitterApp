@@ -97,18 +97,14 @@ function AddEvent() {
   };
 
   const getImageSrc = (item) => {
-  // If the item has a base64 image, use it
-  if (item.image && item.image.startsWith('data:')) {
-    return item.image;
-  }
-
-  // Otherwise try to load from assets
-  try {
-    return require(`../assets/clothing/${item.src.substring(2)}`);
-  } catch (err) {
-    return item.src;
-  }
-};
+    // For newly uploaded images stored as base64
+    if (item.image && item.image.startsWith('data:')) {
+      return item.image;
+    }
+    // For existing images, construct the public path
+    const imageName = item.src.substring(item.src.lastIndexOf('/') + 1);
+    return `/images/${imageName}`;
+  };
 
   return (
     <div className="add-event-container">

@@ -59,18 +59,14 @@ function Suggestion() {
   }, []);
 
   // Helper function to get image source
-  const getImageSrc = (item) => {
-    // If the item has a base64 image, use it
+   const getImageSrc = (item) => {
+    // For newly uploaded images stored as base64
     if (item.image && item.image.startsWith('data:')) {
       return item.image;
     }
-
-    // Otherwise try to load from assets
-    try {
-      return require(`../assets/clothing/${item.src.substring(2)}`);
-    } catch (err) {
-      return item.src;
-    }
+    // For existing images, construct the public path
+    const imageName = item.src.substring(item.src.lastIndexOf('/') + 1);
+    return `/images/${imageName}`;
   };
 
   const handleWearClick = () => {
@@ -121,7 +117,7 @@ function Suggestion() {
           <div className="suggestion-grid">
             {suggestedItems.map(item => (
               <div key={item.id} className="suggestion-item">
-                <img src={item.src} alt={item.alt} />
+                <img src={getImageSrc(item)} alt={item.alt} />
                 <div className="suggestion-item-label">{item.label}</div>
               </div>
             ))}
