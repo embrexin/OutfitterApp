@@ -487,6 +487,10 @@
   border-color: #47A0DF;
 }
 
+.tag-checkbox-item.selected label {
+  color: white;
+}
+
 .tag-checkbox-item input[type="checkbox"] {
   margin-right: 8px;
   cursor: pointer;
